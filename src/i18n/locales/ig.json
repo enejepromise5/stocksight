@@ -1,0 +1,46 @@
+{
+  "welcome": {
+    "title": "StockSight",
+    "tagline": "Ngwa Ahịa Nwere Ọgụgụ Isi. Ire Ere Dị Mfe. Njikwa Oge Niile.",
+    "getStarted": "Malite",
+    "signIn": "Banye",
+    "signUp": "Debanye Aha"
+  },
+  "auth": {
+    "email": "Ozi-Eletrọnịkị",
+    "password": "Okwuntughe",
+    "shopName": "Aha Ụlọ Ahịa",
+    "login": "Banye",
+    "signup": "Mepee Akaụntụ",
+    "haveAccount": "Ị nwere akaụntụ?",
+    "noAccount": "Ị nweghị akaụntụ?",
+    "ownerOnly": "Ndebanye Aha Onye Nwe Naanị"
+  },
+  "dashboard": {
+    "sales": "Ire Ere",
+    "inventory": "Ngwa Ahịa",
+    "reports": "Akụkọ",
+    "staff": "Ndị Ọrụ",
+    "settings": "Ntọala",
+    "logout": "Pụọ"
+  },
+  "pos": {
+    "title": "Ebe Ire Ere",
+    "itemName": "Aha Ngwa Ahịa",
+    "quantity": "Ọnụ Ọgụgụ",
+    "price": "Ọnụ Ahịa",
+    "total": "Ngụkọta",
+    "recordSale": "Dekọọ Ire Ere",
+    "todaySales": "Ire Ere Taa",
+    "addStock": "Tinye Ngwa Ahịa"
+  },
+  "owner": {
+    "totalSales": "Ngụkọta Ire Ere",
+    "expectedCash": "Ego A Na-atụ Anya",
+    "profit": "Atụmatụ Uru",
+    "lowStock": "Ngwa Ahịa Dị Obere",
+    "reconcile": "Mezie",
+    "approve": "Kwado",
+    "dispute": "Rụọ Ụka"
+  }
+}

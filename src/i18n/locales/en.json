@@ -1,0 +1,46 @@
+{
+  "welcome": {
+    "title": "StockSight",
+    "tagline": "Smart Inventory. Seamless Sales. Real-Time Control.",
+    "getStarted": "Get Started",
+    "signIn": "Sign In",
+    "signUp": "Sign Up"
+  },
+  "auth": {
+    "email": "Email",
+    "password": "Password",
+    "shopName": "Shop Name",
+    "login": "Log In",
+    "signup": "Create Account",
+    "haveAccount": "Already have an account?",
+    "noAccount": "Don't have an account?",
+    "ownerOnly": "Owner Registration Only"
+  },
+  "dashboard": {
+    "sales": "Sales",
+    "inventory": "Inventory",
+    "reports": "Reports",
+    "staff": "Staff",
+    "settings": "Settings",
+    "logout": "Logout"
+  },
+  "pos": {
+    "title": "Point of Sale",
+    "itemName": "Item Name",
+    "quantity": "Quantity",
+    "price": "Price",
+    "total": "Total",
+    "recordSale": "Record Sale",
+    "todaySales": "Today's Sales",
+    "addStock": "Add Stock"
+  },
+  "owner": {
+    "totalSales": "Total Sales",
+    "expectedCash": "Expected Cash",
+    "profit": "Profit Estimate",
+    "lowStock": "Low Stock Items",
+    "reconcile": "Reconcile",
+    "approve": "Approve",
+    "dispute": "Dispute"
+  }
+}
