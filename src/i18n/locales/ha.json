@@ -1,0 +1,46 @@
+{
+  "welcome": {
+    "title": "StockSight",
+    "tagline": "Kayan Ajiya Mai Hankali. Sayar Da Sauƙi. Sarrafa Lokaci-Lokaci.",
+    "getStarted": "Fara",
+    "signIn": "Shiga",
+    "signUp": "Yi Rajista"
+  },
+  "auth": {
+    "email": "Imel",
+    "password": "Kalmar Sirri",
+    "shopName": "Sunan Shago",
+    "login": "Shiga",
+    "signup": "Ƙirƙiri Asusun",
+    "haveAccount": "Kuna da asusun?",
+    "noAccount": "Ba ku da asusun?",
+    "ownerOnly": "Rajistar Mai Shi Kaɗai"
+  },
+  "dashboard": {
+    "sales": "Tallace-tallace",
+    "inventory": "Kayayyaki",
+    "reports": "Rahotanni",
+    "staff": "Ma'aikata",
+    "settings": "Saitoci",
+    "logout": "Fita"
+  },
+  "pos": {
+    "title": "Wurin Sayarwa",
+    "itemName": "Sunan Abu",
+    "quantity": "Adadi",
+    "price": "Farashi",
+    "total": "Jimla",
+    "recordSale": "Yi Rikodin Siyarwa",
+    "todaySales": "Tallace-tallacen Yau",
+    "addStock": "Ƙara Kayayyaki"
+  },
+  "owner": {
+    "totalSales": "Jimlar Tallace-tallace",
+    "expectedCash": "Kuɗin Da Ake Tsammani",
+    "profit": "Ƙimar Riba",
+    "lowStock": "Kayayyaki Masu Ƙaranci",
+    "reconcile": "Daidaita",
+    "approve": "Amince",
+    "dispute": "Jayayya"
+  }
+}

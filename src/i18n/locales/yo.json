@@ -1,0 +1,46 @@
+{
+  "welcome": {
+    "title": "StockSight",
+    "tagline": "Ìkójọpọ̀ Ọlọ́gbọ́n. Títà Tó Rọrùn. Ìṣàkóso Àkókò-Gidi.",
+    "getStarted": "Bẹ̀rẹ̀",
+    "signIn": "Wọlé",
+    "signUp": "Forúkọsílẹ̀"
+  },
+  "auth": {
+    "email": "Ímeèlì",
+    "password": "Ọ̀rọ̀ Aṣínà",
+    "shopName": "Orúkọ Ṣọ́ọ̀bù",
+    "login": "Wọlé",
+    "signup": "Ṣẹ̀dá Àkọ́ọ̀lẹ̀",
+    "haveAccount": "Ǹjẹ́ o ní àkọ́ọ̀lẹ̀?",
+    "noAccount": "Ǹjẹ́ o ò ní àkọ́ọ̀lẹ̀?",
+    "ownerOnly": "Ìforúkọsílẹ̀ Olóhun Nìkan"
+  },
+  "dashboard": {
+    "sales": "Títà",
+    "inventory": "Ìkójọpọ̀",
+    "reports": "Ìròyìn",
+    "staff": "Àwọn Òṣìṣẹ́",
+    "settings": "Ètò",
+    "logout": "Jáde"
+  },
+  "pos": {
+    "title": "Ibi Títà",
+    "itemName": "Orúkọ Ohun",
+    "quantity": "Ìwọ̀n",
+    "price": "Owó",
+    "total": "Àpapọ̀",
+    "recordSale": "Ṣe Ìgbéjáde Títà",
+    "todaySales": "Títà Lónìí",
+    "addStock": "Fi Ìkójọpọ̀ Kún"
+  },
+  "owner": {
+    "totalSales": "Àpapọ̀ Títà",
+    "expectedCash": "Owó Tí A Ń Retí",
+    "profit": "Ìpínsíra Èrè",
+    "lowStock": "Àwọn Ohun Kékeré",
+    "reconcile": "Mú Dọ́gba",
+    "approve": "Fọwọ́sí",
+    "dispute": "Ṣàtakò"
+  }
+}
