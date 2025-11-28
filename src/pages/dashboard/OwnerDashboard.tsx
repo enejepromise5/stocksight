@@ -15,19 +15,19 @@ const OwnerDashboard = () => {
   const kpiData = [
     {
       title: t('owner.totalSales'),
-      value: '$12,450',
+      value: '₦12,450',
       icon: DollarSign,
       trend: '+12%'
     },
     {
       title: t('owner.expectedCash'),
-      value: '$11,200',
+      value: '₦11,200',
       icon: Package,
       trend: '+8%'
     },
     {
       title: t('owner.profit'),
-      value: '$3,890',
+      value: '₦3,890',
       icon: TrendingUp,
       trend: '+15%'
     },
@@ -112,7 +112,7 @@ const OwnerDashboard = () => {
                       <p className="text-sm text-muted-foreground">Rice Bag x 3</p>
                     </div>
                     <div className="text-right">
-                      <p className="font-bold text-primary">$45.00</p>
+                      <p className="font-bold text-primary">₦45.00</p>
                       <p className="text-xs text-muted-foreground">2 min ago</p>
                     </div>
                   </div>
@@ -122,7 +122,7 @@ const OwnerDashboard = () => {
                       <p className="text-sm text-muted-foreground">Cooking Oil x 2</p>
                     </div>
                     <div className="text-right">
-                      <p className="font-bold text-primary">$28.00</p>
+                      <p className="font-bold text-primary">₦28.00</p>
                       <p className="text-xs text-muted-foreground">15 min ago</p>
                     </div>
                   </div>
