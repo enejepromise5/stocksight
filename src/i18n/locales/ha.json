@@ -2,6 +2,9 @@
   "welcome": {
     "title": "StockSight",
     "tagline": "Kayan Ajiya Mai Hankali. Sayar Da Sauƙi. Sarrafa Lokaci-Lokaci.",
+    "description": "Tsarin sarrafa kayayyaki da tallace-tallace na zamani wanda aka ƙera don masu shaguna da wakilan tallace-tallace. Ku bi diddigin kaya, yi rikodin tallace-tallace, kuma ku lura da aikin kasuwancin ku a lokaci-lokaci.",
+    "forOwners": "Don Masu Gida: Ku lura da tallace-tallace, sarrafa kayayyaki, da daidaita ma'amaloli na yau da kullun",
+    "forReps": "Don Wakilan Tallace-tallace: Tsarin POS na wayar hannu mai sauri wanda aka inganta don shigar da tallace-tallace cikin sauri",
     "getStarted": "Fara",
     "signIn": "Shiga",
     "signUp": "Yi Rajista"

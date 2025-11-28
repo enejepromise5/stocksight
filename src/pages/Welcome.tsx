@@ -70,6 +70,24 @@ const Welcome = () => {
           </p>
         </motion.div>
 
+        <motion.div variants={itemVariants} className="space-y-4 max-w-2xl mx-auto">
+          <p className="text-base md:text-lg text-foreground/80 leading-relaxed">
+            {t('welcome.description')}
+          </p>
+          <div className="grid md:grid-cols-2 gap-4 pt-4">
+            <div className="bg-card/50 backdrop-blur-sm rounded-lg p-4 border border-border/50">
+              <p className="text-sm md:text-base text-foreground/90">
+                {t('welcome.forOwners')}
+              </p>
+            </div>
+            <div className="bg-card/50 backdrop-blur-sm rounded-lg p-4 border border-border/50">
+              <p className="text-sm md:text-base text-foreground/90">
+                {t('welcome.forReps')}
+              </p>
+            </div>
+          </div>
+        </motion.div>
+
         <motion.div variants={itemVariants} className="space-y-6">
           <LanguageSelector />
         </motion.div>

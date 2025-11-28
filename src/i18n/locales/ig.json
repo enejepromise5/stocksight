@@ -2,6 +2,9 @@
   "welcome": {
     "title": "StockSight",
     "tagline": "Ngwa Ahịa Nwere Ọgụgụ Isi. Ire Ere Dị Mfe. Njikwa Oge Niile.",
+    "description": "Usoro njikwa ngwa ahịa na ire ere nke oge a emebere maka ndị nwe ụlọ ahịa na ndị nnọchi anya ire ere. Soro ngwa ahịa, dekọọ ire ere, ma lelee ọrụ azụmahịa gị n'oge ọ bụla.",
+    "forOwners": "Maka Ndị Nwe: Lelee ire ere, jikwaa ngwa ahịa, ma mezie azụmahịa kwa ụbọchị",
+    "forReps": "Maka Ndị Ire Ere: Usoro POS ekwentị ngwa ngwa emebere maka ntinye ire ere ngwa ngwa",
     "getStarted": "Malite",
     "signIn": "Banye",
     "signUp": "Debanye Aha"

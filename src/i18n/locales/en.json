@@ -2,6 +2,9 @@
   "welcome": {
     "title": "StockSight",
     "tagline": "Smart Inventory. Seamless Sales. Real-Time Control.",
+    "description": "A modern inventory and sales management system designed for shop owners and sales representatives. Track stock, record sales, and monitor your business performance in real-time.",
+    "forOwners": "For Owners: Monitor sales, manage inventory, and reconcile daily transactions",
+    "forReps": "For Sales Reps: Fast mobile POS system optimized for quick sales entry",
     "getStarted": "Get Started",
     "signIn": "Sign In",
     "signUp": "Sign Up"

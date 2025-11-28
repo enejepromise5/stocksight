@@ -2,6 +2,9 @@
   "welcome": {
     "title": "StockSight",
     "tagline": "Ìkójọpọ̀ Ọlọ́gbọ́n. Títà Tó Rọrùn. Ìṣàkóso Àkókò-Gidi.",
+    "description": "Ètò ìṣàkóso ìkójọpọ̀ àti títà ti ìgbàlódé tí a ṣẹ̀dá fún àwọn olóhun ṣọ́ọ̀bù àti àwọn aṣojú títà. Tọ́jú ìkójọpọ̀, ṣe ìgbéjáde títà, kí o sì bojútó iṣẹ́ iṣòwò rẹ ní àkókò-gidi.",
+    "forOwners": "Fún Àwọn Olóhun: Bojútó títà, ṣàkóso ìkójọpọ̀, kí o sì mú àwọn ìṣòwò ojoojúmọ́ dọ́gba",
+    "forReps": "Fún Àwọn Aṣojú Títà: Ètò POS fóònù aláyára tí a mú dára fún títítà yára",
     "getStarted": "Bẹ̀rẹ̀",
     "signIn": "Wọlé",
     "signUp": "Forúkọsílẹ̀"
