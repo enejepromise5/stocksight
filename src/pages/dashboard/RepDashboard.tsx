@@ -45,7 +45,7 @@ const RepDashboard = () => {
               <DollarSign className="w-12 h-12 text-primary" />
             </div>
             <p className="text-sm text-muted-foreground mb-2">Today's Total Sales</p>
-            <p className="text-5xl sm:text-6xl font-bold text-primary">$450.00</p>
+            <p className="text-5xl sm:text-6xl font-bold text-primary">₦450.00</p>
           </Card>
         </motion.div>
 
