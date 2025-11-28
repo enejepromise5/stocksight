@@ -136,7 +136,7 @@ export const POSInterface = () => {
               {cart.map((item, idx) => (
                 <div key={idx} className="flex justify-between text-card-foreground">
                   <span>{item.itemName} x {item.quantity}</span>
-                  <span className="font-bold">₦{(item.price * item.quantity).toFixed(2)}</span>
+                  <span className="font-bold">#{(item.price * item.quantity).toFixed(2)}</span>
                 </div>
               ))}
             </div>
@@ -144,7 +144,7 @@ export const POSInterface = () => {
             <div className="border-t border-border pt-4">
               <div className="flex justify-between items-center mb-4">
                   <span className="text-xl font-bold text-card-foreground">Total</span>
-                <span className="text-3xl font-bold text-primary">₦{totalAmount.toFixed(2)}</span>
+                <span className="text-3xl font-bold text-primary">#{totalAmount.toFixed(2)}</span>
               </div>
               
               <Button onClick={recordSale} className="w-full" size="lg">
