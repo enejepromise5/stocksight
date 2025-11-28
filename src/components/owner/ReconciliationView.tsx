@@ -44,7 +44,7 @@ export const ReconciliationView = () => {
           <div className="space-y-3">
             <div className="flex justify-between">
               <span className="text-muted-foreground">Total Sales:</span>
-              <span className="font-bold text-card-foreground">₦{mockData.totalSales.toFixed(2)}</span>
+              <span className="font-bold text-card-foreground">#{mockData.totalSales.toFixed(2)}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">Transactions:</span>
@@ -63,12 +63,12 @@ export const ReconciliationView = () => {
           <div className="space-y-3">
             <div className="flex justify-between">
               <span className="text-muted-foreground">Reported Cash:</span>
-              <span className="font-bold text-card-foreground">₦{mockData.reportedCash.toFixed(2)}</span>
+              <span className="font-bold text-card-foreground">#{mockData.reportedCash.toFixed(2)}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">Difference:</span>
               <span className={`font-bold ${isMatching ? 'text-primary' : 'text-destructive'}`}>
-                ₦{Math.abs(mockData.totalSales - mockData.reportedCash).toFixed(2)}
+                #{Math.abs(mockData.totalSales - mockData.reportedCash).toFixed(2)}
               </span>
             </div>
           </div>
