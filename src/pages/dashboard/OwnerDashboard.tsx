@@ -1,39 +1,100 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DollarSign, TrendingUp, AlertCircle, Package, Users, FileCheck } from 'lucide-react';
 import { InventoryTable } from '@/components/owner/InventoryTable';
 import { ReconciliationView } from '@/components/owner/ReconciliationView';
 import { StaffManagement } from '@/components/owner/StaffManagement';
+import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { supabase } from '@/integrations/supabase/client';
 
 const OwnerDashboard = () => {
   const { t } = useTranslation();
+  const [totalSales, setTotalSales] = useState(0);
+  const [totalProfit, setTotalProfit] = useState(0);
+  const [lowStockCount, setLowStockCount] = useState(0);
+
+  useEffect(() => {
+    fetchDashboardData();
+
+    // Set up realtime subscription for sales
+    const channel = supabase
+      .channel('owner-dashboard-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'sales'
+        },
+        () => {
+          fetchDashboardData();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
+  const fetchDashboardData = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    // Fetch today's sales
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const { data: salesData } = await supabase
+      .from('sales')
+      .select('total_amount')
+      .eq('shop_id', user.id)
+      .gte('created_at', today.toISOString());
+
+    if (salesData) {
+      const total = salesData.reduce((sum, sale) => sum + parseFloat(sale.total_amount.toString()), 0);
+      setTotalSales(total);
+      // For simplicity, profit is 30% of sales (you can adjust this)
+      setTotalProfit(total * 0.3);
+    }
+
+    // Fetch low stock items (quantity < 10)
+    const { data: inventoryData } = await supabase
+      .from('inventory')
+      .select('quantity')
+      .eq('shop_id', user.id)
+      .lt('quantity', 10);
+
+    if (inventoryData) {
+      setLowStockCount(inventoryData.length);
+    }
+  };
 
   const kpiData = [
     {
       title: t('owner.totalSales'),
-      value: '#0.00',
+      value: `#${totalSales.toFixed(2)}`,
       icon: DollarSign,
       trend: '+0%'
     },
     {
       title: t('owner.expectedCash'),
-      value: '#0.00',
+      value: `#${totalSales.toFixed(2)}`,
       icon: Package,
       trend: '+0%'
     },
     {
       title: t('owner.profit'),
-      value: '#0.00',
+      value: `#${totalProfit.toFixed(2)}`,
       icon: TrendingUp,
       trend: '+0%'
     },
     {
       title: t('owner.lowStock'),
-      value: '0 items',
+      value: `${lowStockCount} items`,
       icon: AlertCircle,
       trend: 'warning'
     }

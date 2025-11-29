@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Card } from '@/components/ui/card';
 import { ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
 
 const Login = () => {
   const { t } = useTranslation();
@@ -20,21 +21,39 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
 
-    // Simulate authentication
-    setTimeout(() => {
-      // Mock role-based routing
-      const mockRole = email.includes('owner') ? 'OWNER' : 'SALES_REP';
-      
-      toast.success('Login successful!');
-      
-      if (mockRole === 'OWNER') {
-        navigate('/dashboard/owner');
-      } else {
-        navigate('/dashboard/rep');
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        toast.error(error.message);
+        setLoading(false);
+        return;
       }
-      
+
+      if (data.user) {
+        // Fetch user role
+        const { data: roleData } = await supabase
+          .from('user_roles')
+          .select('role')
+          .eq('user_id', data.user.id)
+          .single();
+
+        toast.success('Login successful!');
+        
+        if (roleData?.role === 'OWNER') {
+          navigate('/dashboard/owner');
+        } else {
+          navigate('/dashboard/rep');
+        }
+      }
+    } catch (error: any) {
+      toast.error(error.message || 'An error occurred during login');
+    } finally {
       setLoading(false);
-    }, 1000);
+    }
   };
 
   return (

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
@@ -7,6 +7,8 @@ import { Label } from '@/components/ui/label';
 import { Card } from '@/components/ui/card';
 import { Plus, Minus, ShoppingCart } from 'lucide-react';
 import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface CartItem {
   itemName: string;
@@ -14,24 +16,57 @@ interface CartItem {
   price: number;
 }
 
+interface InventoryItem {
+  id: string;
+  item_name: string;
+  price: number;
+  quantity: number;
+}
+
 export const POSInterface = () => {
   const { t } = useTranslation();
-  const [itemName, setItemName] = useState('');
+  const [inventory, setInventory] = useState<InventoryItem[]>([]);
+  const [selectedItemId, setSelectedItemId] = useState('');
   const [quantity, setQuantity] = useState(1);
-  const [price, setPrice] = useState('');
   const [cart, setCart] = useState<CartItem[]>([]);
   const [showFlash, setShowFlash] = useState(false);
 
+  useEffect(() => {
+    fetchInventory();
+  }, []);
+
+  const fetchInventory = async () => {
+    const { data, error } = await supabase
+      .from('inventory')
+      .select('*')
+      .order('item_name');
+
+    if (!error && data) {
+      setInventory(data);
+    }
+  };
+
   const addToCart = () => {
-    if (!itemName || !price) {
-      toast.error('Please fill all fields');
+    if (!selectedItemId) {
+      toast.error('Please select an item');
       return;
     }
 
-    setCart([...cart, { itemName, quantity, price: parseFloat(price) }]);
-    setItemName('');
+    const selectedItem = inventory.find(item => item.id === selectedItemId);
+    if (!selectedItem) return;
+
+    if (selectedItem.quantity < quantity) {
+      toast.error('Not enough stock available');
+      return;
+    }
+
+    setCart([...cart, { 
+      itemName: selectedItem.item_name, 
+      quantity, 
+      price: selectedItem.price 
+    }]);
+    setSelectedItemId('');
     setQuantity(1);
-    setPrice('');
     toast.success('Item added to cart');
   };
 
@@ -43,13 +78,59 @@ export const POSInterface = () => {
       return;
     }
 
-    // Simulate API call
-    setShowFlash(true);
-    setTimeout(() => {
-      setShowFlash(false);
-      toast.success('Sale recorded successfully!');
-      setCart([]);
-    }, 500);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast.error('Please login to record sales');
+        return;
+      }
+
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('id', user.id)
+        .single();
+
+      if (!profile) {
+        toast.error('Profile not found');
+        return;
+      }
+
+      // Insert sale
+      const { error: saleError } = await supabase
+        .from('sales')
+        .insert({
+          shop_id: profile.id,
+          rep_id: user.id,
+          items: cart as any,
+          total_amount: totalAmount
+        });
+
+      if (saleError) throw saleError;
+
+      // Update inventory quantities
+      for (const cartItem of cart) {
+        const inventoryItem = inventory.find(item => item.item_name === cartItem.itemName);
+        if (inventoryItem) {
+          const { error: updateError } = await supabase
+            .from('inventory')
+            .update({ quantity: inventoryItem.quantity - cartItem.quantity })
+            .eq('id', inventoryItem.id);
+
+          if (updateError) throw updateError;
+        }
+      }
+
+      setShowFlash(true);
+      setTimeout(() => {
+        setShowFlash(false);
+        toast.success('Sale recorded successfully!');
+        setCart([]);
+        fetchInventory(); // Refresh inventory
+      }, 500);
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to record sale');
+    }
   };
 
   return (
@@ -73,27 +154,29 @@ export const POSInterface = () => {
           <h3 className="text-xl font-bold text-card-foreground">Add Item</h3>
           
           <div className="space-y-2">
-            <Label htmlFor="itemName">Item Name</Label>
-            <Input
-              id="itemName"
-              value={itemName}
-              onChange={(e) => setItemName(e.target.value)}
-              placeholder="Enter item name"
-              className="text-lg"
-            />
+            <Label htmlFor="itemName">Select Item</Label>
+            <Select value={selectedItemId} onValueChange={setSelectedItemId}>
+              <SelectTrigger className="text-lg">
+                <SelectValue placeholder="Choose an item" />
+              </SelectTrigger>
+              <SelectContent>
+                {inventory.map((item) => (
+                  <SelectItem key={item.id} value={item.id}>
+                    {item.item_name} - #{item.price.toFixed(2)} (Stock: {item.quantity})
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="price">Price per Unit</Label>
-            <Input
-              id="price"
-              type="number"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              placeholder="0.00"
-              className="text-lg"
-            />
-          </div>
+          {selectedItemId && (
+            <div className="p-4 bg-muted rounded-lg">
+              <p className="text-sm text-muted-foreground">Price per unit</p>
+              <p className="text-2xl font-bold text-primary">
+                #{inventory.find(i => i.id === selectedItemId)?.price.toFixed(2)}
+              </p>
+            </div>
+          )}
 
           <div className="space-y-2">
             <Label>Quantity</Label>
