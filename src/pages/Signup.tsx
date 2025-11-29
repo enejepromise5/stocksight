@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Card } from '@/components/ui/card';
 import { ArrowLeft, Shield } from 'lucide-react';
 import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
 
 const Signup = () => {
   const { t } = useTranslation();
@@ -21,12 +22,50 @@ const Signup = () => {
     e.preventDefault();
     setLoading(true);
 
-    // Simulate signup
-    setTimeout(() => {
-      toast.success('Account created successfully!');
-      navigate('/dashboard/owner');
+    try {
+      const redirectUrl = `${window.location.origin}/`;
+      
+      // Sign up with shop_name in metadata
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: redirectUrl,
+          data: {
+            shop_name: shopName,
+          }
+        }
+      });
+
+      if (error) {
+        // Handle duplicate email error
+        if (error.message.includes('already registered')) {
+          toast.error('This email is already registered. Please login instead.');
+        } else {
+          toast.error(error.message);
+        }
+        setLoading(false);
+        return;
+      }
+
+      if (data.user) {
+        // Assign OWNER role
+        const { error: roleError } = await supabase
+          .from('user_roles')
+          .insert({ user_id: data.user.id, role: 'OWNER' });
+
+        if (roleError) {
+          console.error('Error assigning role:', roleError);
+        }
+
+        toast.success('Account created successfully!');
+        navigate('/dashboard/owner');
+      }
+    } catch (error: any) {
+      toast.error(error.message || 'An error occurred during signup');
+    } finally {
       setLoading(false);
-    }, 1000);
+    }
   };
 
   return (

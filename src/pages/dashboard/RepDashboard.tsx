@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
@@ -8,10 +8,55 @@ import { POSInterface } from '@/components/rep/POSInterface';
 import { SalesLog } from '@/components/rep/SalesLog';
 import { SlideOverPanel } from '@/components/SlideOverPanel';
 import { AddStockPanel } from '@/components/rep/AddStockPanel';
+import { supabase } from '@/integrations/supabase/client';
 
 const RepDashboard = () => {
   const { t } = useTranslation();
   const [isAddStockOpen, setIsAddStockOpen] = useState(false);
+  const [todayTotal, setTodayTotal] = useState(0);
+
+  useEffect(() => {
+    fetchTodayTotal();
+
+    // Set up realtime subscription
+    const channel = supabase
+      .channel('sales-total-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'sales'
+        },
+        () => {
+          fetchTodayTotal();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
+  const fetchTodayTotal = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const { data, error } = await supabase
+      .from('sales')
+      .select('total_amount')
+      .eq('rep_id', user.id)
+      .gte('created_at', today.toISOString());
+
+    if (!error && data) {
+      const total = data.reduce((sum, sale) => sum + parseFloat(sale.total_amount.toString()), 0);
+      setTodayTotal(total);
+    }
+  };
 
   return (
     <div className="min-h-screen gradient-deep p-4 sm:p-6">
@@ -45,7 +90,7 @@ const RepDashboard = () => {
               <DollarSign className="w-12 h-12 text-primary" />
             </div>
             <p className="text-sm text-muted-foreground mb-2">Today's Total Sales</p>
-            <p className="text-5xl sm:text-6xl font-bold text-primary">#0.00</p>
+            <p className="text-5xl sm:text-6xl font-bold text-primary">#{todayTotal.toFixed(2)}</p>
           </Card>
         </motion.div>
 
