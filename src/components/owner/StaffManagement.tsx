@@ -14,10 +14,7 @@ interface StaffMember {
   role: string;
 }
 
-const mockStaff: StaffMember[] = [
-  { id: '1', email: 'john@example.com', name: 'John Doe', role: 'SALES_REP' },
-  { id: '2', email: 'jane@example.com', name: 'Jane Smith', role: 'SALES_REP' },
-];
+const mockStaff: StaffMember[] = [];
 
 export const StaffManagement = () => {
   const [staff, setStaff] = useState<StaffMember[]>(mockStaff);
@@ -123,28 +120,35 @@ export const StaffManagement = () => {
 
       {/* Staff List */}
       <div className="space-y-3">
-        {staff.map((member, index) => (
-          <motion.div
-            key={member.id}
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: index * 0.1 }}
-            className="flex items-center justify-between p-4 border border-border rounded-lg"
-          >
-            <div>
-              <p className="font-medium text-card-foreground">{member.name}</p>
-              <p className="text-sm text-muted-foreground">{member.email}</p>
-            </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => handleRemoveStaff(member.id)}
-              className="text-destructive hover:text-destructive hover:bg-destructive/10"
+        {staff.length === 0 ? (
+          <div className="text-center py-8 border border-dashed border-border rounded-lg">
+            <p className="text-muted-foreground">No sales representatives yet.</p>
+            <p className="text-sm text-muted-foreground mt-2">Click "Add Sales Rep" to create accounts for your team.</p>
+          </div>
+        ) : (
+          staff.map((member, index) => (
+            <motion.div
+              key={member.id}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.1 }}
+              className="flex items-center justify-between p-4 border border-border rounded-lg"
             >
-              <Trash2 className="h-4 w-4" />
-            </Button>
-          </motion.div>
-        ))}
+              <div>
+                <p className="font-medium text-card-foreground">{member.name}</p>
+                <p className="text-sm text-muted-foreground">{member.email}</p>
+              </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => handleRemoveStaff(member.id)}
+                className="text-destructive hover:text-destructive hover:bg-destructive/10"
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </motion.div>
+          ))
+        )}
       </div>
     </Card>
   );
