@@ -15,25 +15,25 @@ const OwnerDashboard = () => {
   const kpiData = [
     {
       title: t('owner.totalSales'),
-      value: '#12,450',
+      value: '#0.00',
       icon: DollarSign,
-      trend: '+12%'
+      trend: '+0%'
     },
     {
       title: t('owner.expectedCash'),
-      value: '#11,200',
+      value: '#0.00',
       icon: Package,
-      trend: '+8%'
+      trend: '+0%'
     },
     {
       title: t('owner.profit'),
-      value: '#3,890',
+      value: '#0.00',
       icon: TrendingUp,
-      trend: '+15%'
+      trend: '+0%'
     },
     {
       title: t('owner.lowStock'),
-      value: '5 items',
+      value: '0 items',
       icon: AlertCircle,
       trend: 'warning'
     }
@@ -105,37 +105,9 @@ const OwnerDashboard = () => {
             <TabsContent value="overview" className="space-y-6">
               <Card className="p-6">
                 <h2 className="text-2xl font-bold mb-4 text-card-foreground">Recent Activity</h2>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between py-3 border-b border-border/50">
-                    <div>
-                      <p className="font-medium text-card-foreground">Sale Recorded</p>
-                      <p className="text-sm text-muted-foreground">Rice Bag x 3</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="font-bold text-primary">#45.00</p>
-                      <p className="text-xs text-muted-foreground">2 min ago</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between py-3 border-b border-border/50">
-                    <div>
-                      <p className="font-medium text-card-foreground">Sale Recorded</p>
-                      <p className="text-sm text-muted-foreground">Cooking Oil x 2</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="font-bold text-primary">#28.00</p>
-                      <p className="text-xs text-muted-foreground">15 min ago</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between py-3">
-                    <div>
-                      <p className="font-medium text-card-foreground">Stock Added</p>
-                      <p className="text-sm text-muted-foreground">Beans x 50</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="font-bold text-muted-foreground">+50 units</p>
-                      <p className="text-xs text-muted-foreground">1 hour ago</p>
-                    </div>
-                  </div>
+                <div className="text-center py-12">
+                  <p className="text-muted-foreground text-lg">No activity yet.</p>
+                  <p className="text-sm text-muted-foreground mt-2">Recent sales and inventory updates will appear here.</p>
                 </div>
               </Card>
             </TabsContent>
