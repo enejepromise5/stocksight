@@ -31,32 +31,33 @@ export const AddStockPanel = ({ onClose }: AddStockPanelProps) => {
         return;
       }
 
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('id')
-        .eq('id', user.id)
-        .single();
+      // Determine the shop this user belongs to (owner or linked shop for reps)
+      const { data: shopId, error: shopIdError } = await supabase.rpc('get_user_shop_id', {
+        _user_id: user.id,
+      });
 
-      if (!profile) {
-        toast.error('Profile not found');
+      if (shopIdError || !shopId) {
+        toast.error('Unable to determine shop for this user');
         return;
       }
 
-      // Check if item exists
-      const { data: existingItem } = await supabase
+      // Check if item exists for this shop
+      const { data: existingItem, error: existingError } = await supabase
         .from('inventory')
         .select('*')
-        .eq('shop_id', profile.id)
+        .eq('shop_id', shopId)
         .eq('item_name', itemName)
-        .single();
+        .maybeSingle();
+
+      if (existingError) throw existingError;
 
       if (existingItem) {
         // Update existing item
         const { error } = await supabase
           .from('inventory')
-          .update({ 
-            quantity: existingItem.quantity + parseInt(quantity),
-            price: parseFloat(price)
+          .update({
+            quantity: existingItem.quantity + parseInt(quantity, 10),
+            price: parseFloat(price),
           })
           .eq('id', existingItem.id);
 
@@ -66,10 +67,10 @@ export const AddStockPanel = ({ onClose }: AddStockPanelProps) => {
         const { error } = await supabase
           .from('inventory')
           .insert({
-            shop_id: profile.id,
+            shop_id: shopId,
             item_name: itemName,
-            quantity: parseInt(quantity),
-            price: parseFloat(price)
+            quantity: parseInt(quantity, 10),
+            price: parseFloat(price),
           });
 
         if (error) throw error;
