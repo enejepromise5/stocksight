@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { UserPlus, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
 
 interface StaffMember {
   id: string;
@@ -14,16 +15,57 @@ interface StaffMember {
   role: string;
 }
 
-const mockStaff: StaffMember[] = [];
-
 export const StaffManagement = () => {
-  const [staff, setStaff] = useState<StaffMember[]>(mockStaff);
+  const [staff, setStaff] = useState<StaffMember[]>([]);
   const [showAddForm, setShowAddForm] = useState(false);
   const [newEmail, setNewEmail] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [newName, setNewName] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleAddStaff = (e: React.FormEvent) => {
+  useEffect(() => {
+    fetchStaff();
+  }, []);
+
+  const fetchStaff = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    // Get all sales reps linked to this owner
+    const { data: profiles } = await supabase
+      .from('profiles')
+      .select('id')
+      .eq('owner_id', user.id);
+
+    if (!profiles || profiles.length === 0) {
+      setStaff([]);
+      return;
+    }
+
+    // Get roles for these profiles
+    const { data: roles } = await supabase
+      .from('user_roles')
+      .select('user_id, role')
+      .in('user_id', profiles.map(p => p.id))
+      .eq('role', 'SALES_REP');
+
+    if (!roles || roles.length === 0) {
+      setStaff([]);
+      return;
+    }
+
+    // For display purposes, create staff list
+    const staffData = roles.map(role => ({
+      id: role.user_id,
+      email: 'Sales Rep',
+      name: 'Sales Rep',
+      role: 'SALES_REP',
+    }));
+    
+    setStaff(staffData);
+  };
+
+  const handleAddStaff = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!newEmail || !newPassword || !newName) {
@@ -31,21 +73,59 @@ export const StaffManagement = () => {
       return;
     }
 
-    // Simulate API call
-    const newStaff: StaffMember = {
-      id: Date.now().toString(),
-      email: newEmail,
-      name: newName,
-      role: 'SALES_REP',
-    };
+    setLoading(true);
 
-    setStaff([...staff, newStaff]);
-    toast.success(`Sales Rep ${newName} added successfully!`);
-    
-    setNewEmail('');
-    setNewPassword('');
-    setNewName('');
-    setShowAddForm(false);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast.error('Please login to add staff');
+        return;
+      }
+
+      // Create the sales rep user
+      const { data: newUser, error: signUpError } = await supabase.auth.signUp({
+        email: newEmail,
+        password: newPassword,
+        options: {
+          data: {
+            name: newName,
+          },
+        },
+      });
+
+      if (signUpError) throw signUpError;
+      if (!newUser.user) throw new Error('Failed to create user');
+
+      // Link the sales rep to the owner's shop
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .update({ owner_id: user.id })
+        .eq('id', newUser.user.id);
+
+      if (profileError) throw profileError;
+
+      // Assign SALES_REP role
+      const { error: roleError } = await supabase
+        .from('user_roles')
+        .insert({
+          user_id: newUser.user.id,
+          role: 'SALES_REP',
+        });
+
+      if (roleError) throw roleError;
+
+      toast.success(`Sales Rep ${newName} added successfully!`);
+      
+      setNewEmail('');
+      setNewPassword('');
+      setNewName('');
+      setShowAddForm(false);
+      fetchStaff();
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to add sales rep');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleRemoveStaff = (id: string) => {
@@ -109,10 +189,12 @@ export const StaffManagement = () => {
             </div>
 
             <div className="flex gap-3">
-              <Button type="button" variant="secondary" onClick={() => setShowAddForm(false)}>
+              <Button type="button" variant="secondary" onClick={() => setShowAddForm(false)} disabled={loading}>
                 Cancel
               </Button>
-              <Button type="submit">Create Account</Button>
+              <Button type="submit" disabled={loading}>
+                {loading ? 'Creating...' : 'Create Account'}
+              </Button>
             </div>
           </form>
         </motion.div>
