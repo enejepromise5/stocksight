@@ -56,19 +56,30 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          owner_id: string | null
           shop_name: string
         }
         Insert: {
           created_at?: string
           id: string
+          owner_id?: string | null
           shop_name: string
         }
         Update: {
           created_at?: string
           id?: string
+          owner_id?: string | null
           shop_name?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "profiles_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       sales: {
         Row: {
