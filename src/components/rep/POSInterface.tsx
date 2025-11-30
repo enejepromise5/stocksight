@@ -8,7 +8,7 @@ import { Card } from '@/components/ui/card';
 import { Plus, Minus, ShoppingCart } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+
 
 interface CartItem {
   itemName: string;
@@ -26,7 +26,7 @@ interface InventoryItem {
 export const POSInterface = () => {
   const { t } = useTranslation();
   const [inventory, setInventory] = useState<InventoryItem[]>([]);
-  const [selectedItemId, setSelectedItemId] = useState('');
+  const [itemName, setItemName] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [showFlash, setShowFlash] = useState(false);
@@ -47,13 +47,19 @@ export const POSInterface = () => {
   };
 
   const addToCart = () => {
-    if (!selectedItemId) {
-      toast.error('Please select an item');
+    if (!itemName.trim()) {
+      toast.error('Please enter an item name');
       return;
     }
 
-    const selectedItem = inventory.find(item => item.id === selectedItemId);
-    if (!selectedItem) return;
+    const selectedItem = inventory.find(
+      item => item.item_name.toLowerCase() === itemName.trim().toLowerCase()
+    );
+    
+    if (!selectedItem) {
+      toast.error('Item not found in inventory');
+      return;
+    }
 
     if (selectedItem.quantity < quantity) {
       toast.error('Not enough stock available');
@@ -65,7 +71,7 @@ export const POSInterface = () => {
       quantity, 
       price: selectedItem.price 
     }]);
-    setSelectedItemId('');
+    setItemName('');
     setQuantity(1);
     toast.success('Item added to cart');
   };
@@ -154,26 +160,22 @@ export const POSInterface = () => {
           <h3 className="text-xl font-bold text-card-foreground">Add Item</h3>
           
           <div className="space-y-2">
-            <Label htmlFor="itemName">Select Item</Label>
-            <Select value={selectedItemId} onValueChange={setSelectedItemId}>
-              <SelectTrigger className="text-lg">
-                <SelectValue placeholder="Choose an item" />
-              </SelectTrigger>
-              <SelectContent>
-                {inventory.map((item) => (
-                  <SelectItem key={item.id} value={item.id}>
-                    {item.item_name} - #{item.price.toFixed(2)} (Stock: {item.quantity})
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Label htmlFor="itemName">Item Name</Label>
+            <Input
+              id="itemName"
+              type="text"
+              placeholder="Type item name"
+              value={itemName}
+              onChange={(e) => setItemName(e.target.value)}
+              className="text-lg"
+            />
           </div>
 
-          {selectedItemId && (
+          {itemName && inventory.find(i => i.item_name.toLowerCase() === itemName.trim().toLowerCase()) && (
             <div className="p-4 bg-muted rounded-lg">
               <p className="text-sm text-muted-foreground">Price per unit</p>
               <p className="text-2xl font-bold text-primary">
-                #{inventory.find(i => i.id === selectedItemId)?.price.toFixed(2)}
+                #{inventory.find(i => i.item_name.toLowerCase() === itemName.trim().toLowerCase())?.price.toFixed(2)}
               </p>
             </div>
           )}
