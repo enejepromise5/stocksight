@@ -54,11 +54,12 @@ export const StaffManagement = () => {
       return;
     }
 
-    // For display purposes, create staff list
-    const staffData = roles.map(role => ({
+    // For display purposes, create basic staff list
+    // Note: Full user details require admin API access
+    const staffData = roles.map((role: { user_id: string; role: string }) => ({
       id: role.user_id,
-      email: 'Sales Rep',
-      name: 'Sales Rep',
+      email: 'sales-rep@shop.com',
+      name: 'Sales Representative',
       role: 'SALES_REP',
     }));
     
