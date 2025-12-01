@@ -24,10 +24,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       .from('user_roles')
       .select('role')
       .eq('user_id', userId)
-      .single();
+      .order('role', { ascending: true })
+      .limit(1)
+      .maybeSingle();
 
     if (!error && data) {
       setUserRole(data.role as 'OWNER' | 'SALES_REP');
+    } else if (!data) {
+      setUserRole(null);
     }
   };
 

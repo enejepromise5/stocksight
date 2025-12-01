@@ -43,10 +43,17 @@ export const InventoryTable = () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
+    // Get the shop_id using the get_user_shop_id function
+    const { data: shopId } = await supabase.rpc('get_user_shop_id', {
+      _user_id: user.id
+    });
+
+    if (!shopId) return;
+
     const { data, error } = await supabase
       .from('inventory')
       .select('*')
-      .eq('shop_id', user.id)
+      .eq('shop_id', shopId)
       .order('item_name');
 
     if (!error && data) {

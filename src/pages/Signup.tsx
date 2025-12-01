@@ -49,13 +49,16 @@ const Signup = () => {
       }
 
       if (data.user) {
-        // Assign OWNER role
+        // Explicitly assign OWNER role (since trigger no longer does this)
         const { error: roleError } = await supabase
           .from('user_roles')
           .insert({ user_id: data.user.id, role: 'OWNER' });
 
         if (roleError) {
           console.error('Error assigning role:', roleError);
+          toast.error('Failed to assign role. Please contact support.');
+          setLoading(false);
+          return;
         }
 
         toast.success('Account created successfully!');
